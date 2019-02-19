@@ -2,6 +2,7 @@
 
 db_username="dbuser"
 db_password="secret"
+db_name="laravel_database"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DIRNAME=${DIR##*/}
 
@@ -25,6 +26,11 @@ case $key in
     db_password="$2"
     shift # past argument
     shift # past value
+    ;;
+    -d|--dbname)
+    db_name="$2"
+    shift
+    shift
     ;;
     *)    # unknown option
     execution_type+=("$1") # save it in an array for later
@@ -54,7 +60,7 @@ fi
 if [ ! -z "$ex_error" ]; then
     echo "An error occured."
     echo "Execution:"
-    echo "$0 {start|stop|reset|rm} [--dbuser|-u <username>] [--dbpass|-p <password>]"
+    echo "$0 {start|stop|reset|rm} [--dbuser|-u <username>] [--dbpass|-p <password>] [--dbname|-d <database name>]"
     exit -1
 fi
 
@@ -103,16 +109,18 @@ if [[ "$execution_type" == "start" || "$execution_type" == "reset" ]]; then
         docker run \
             --name $docker_mysql \
             -e MYSQL_ROOT_PASSWORD=$db_password \
+            -e MYSQL_DATABASE=$db_name \
             -e MYSQL_USER=$db_username \
             -e MYSQL_PASSWORD=$db_password \
             -p "3306:3306" \
-            -d mysql > /dev/null
+            -d mysql:5.7 > /dev/null
         echo "Created a new mysql docker container with credentials:"
         echo "- root password: $db_password"
         echo "- new username: $db_username"
         echo "- password for new user: $db_password"
         echo "- containername: $docker_mysql"
         echo "MySQL port: 3306"
+        echo "Created new database: $db_name"
     fi
 
     ## Elasticsearch
