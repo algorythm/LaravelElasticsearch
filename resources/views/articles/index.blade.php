@@ -9,13 +9,24 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="margin: 48px auto 48px auto;">
         <div class="row">
-            <div class="panel panel-primary">
-                <h2 class="panel-heading">
+            <div class="card">
+                <h2 class="card-header">
                     Articles <span class="badge badge-pill badge-primary">{{ $articles->count() }}</span>
                 </h2>
-                <div class="panel-body">
+                <form class="card-body" action="{{ url('search') }}" method="GET" >
+                    <div class="form-group">
+                        <label for="searchField">Search for an article</label>
+                        <input type="search" name="q" id="searchField" class="form-control" aria-describedby="searchHelp" placeholder="Enter your search here">
+                        <small id="searchHelp" class="form-text text-muted">Searching through all of the articles in our system.</small>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+                <hr />
+                <div class="card-body">
                     @forelse ($articles as $article)
                         <div class="card" style="margin-bottom: 12px">
                             <div class="card-body">
