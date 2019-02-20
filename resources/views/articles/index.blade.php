@@ -17,7 +17,7 @@
                 <form class="card-body" action="{{ url('search') }}" method="GET" >
                     <div class="form-group">
                         <label for="searchField">Search for an article</label>
-                        <input type="search" name="q" id="searchField" class="form-control" aria-describedby="searchHelp" placeholder="Enter your search here">
+                        <input type="search" name="q" id="searchField" class="form-control" aria-describedby="searchHelp" placeholder="Enter your search here" value="{{ request('q') }}">
                         <small id="searchHelp" class="form-text text-muted">Searching through all of the articles in our system.</small>
                     </div>
                     <div class="form-group">
