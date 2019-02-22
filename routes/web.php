@@ -13,9 +13,22 @@ Route::get('/', function() {
 });
 
 Route::get('/search', function(ArticlesRepository $repository) {
+    $query = (string) request('q');
+
+    if ($query == "")
+    {
+        return redirect("/");
+    }
+
     $articles = $repository->search((string) request('q'));
 
     return view('articles.index', [
         'articles' => $articles,
     ]);
 });
+
+Route::get('/create', function() {
+    return view('articles.create');
+});
+
+Route::post("/create", 'ArticleController@create');
