@@ -2,10 +2,6 @@
 
 use App\Repository\ArticlesRepository;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::get('/', function() {
     return view('articles.index', [
         'articles' => App\Article::all(),
