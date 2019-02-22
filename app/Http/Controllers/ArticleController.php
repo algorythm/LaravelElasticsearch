@@ -37,4 +37,27 @@ class ArticleController extends Controller
 
         return redirect('/');
     }
+
+    public function create_from_url(Request $req)
+    {
+        if ($req->has("preview"))
+        {
+            return view("articles.article", [
+                'article' => $this->scrapeArticle($req->url),
+            ]);
+        }
+        else
+        {
+            Article::create($this->scrapeArticle($req->url));
+        }
+    }
+
+    private function scrapeArticle($url)
+    {
+        return new Article([
+            'title' => "This is a test",
+            'body' => "A small body for a small test.",
+            'tags' => ["tag1", "tag2"]
+        ]);
+    }
 }

@@ -28,3 +28,4 @@ Route::get('/create', function() {
 });
 
 Route::post("/create", 'ArticleController@create');
+Route::post("/create/url", "ArticleController@create_from_url");
