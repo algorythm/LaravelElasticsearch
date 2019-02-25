@@ -31,7 +31,7 @@
                         <div class="card" style="margin-bottom: 12px">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $article->title }}</h5>
-                                <p class="card-text">{{ $article->body }}</p>
+                                <p class="card-text">{!! $article->body !!}</p>
                                 @forelse ($article->tags as $tag)
                                     <span class="badge badge-secondary">{{ $tag }}</span>
                                 @empty

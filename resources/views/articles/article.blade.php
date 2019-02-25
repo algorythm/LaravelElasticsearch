@@ -13,24 +13,23 @@
             <div class="card" style="margin-bottom: 12px; width: 100%;">
                 <h1 class="card-header">
                     {{ $article->title }}
-                    {{-- <div class="float-right"> --}}
-                        <a role="button" href="/create?url={{ Request::get('url') }}" class="btn btn-secondary float-right">Back</a>
-                        {{-- </div> --}}
-                    </h1>
-                    <div class="card-body">
-                        @forelse ($article->tags as $tag)
-                        <span class="badge badge-secondary">{{ $tag }}</span>
-                        @empty
-                        <small class="text-muted">No tags</small>
-                        @endforelse
-                        <hr>
-                        <p class="card-text">{{ $article->body }}</p>
-                    </div>
-                    @if(Request::has('url'))
+                    <a role="button" href="/create?url={{ Request::get('url') }}" class="btn btn-secondary float-right">Back</a>
+                </h1>
+                <div class="card-body">
+                    @forelse ($article->tags as $tag)
+                    <span class="badge badge-secondary">{{ $tag }}</span>
+                    @empty
+                    <small class="text-muted">No tags</small>
+                    @endforelse
                     <hr>
-                    <div class="card-body">
-                        <small class="text-muted">{{ Request::get('url') }}</small>
+                    <p class="card-text">{!! $article->body !!}</p>
+                </div>
+                @if(Request::has('url'))
+                <hr/>
+                <div class="card-body">
+                    <small class="text-muted">{{ Request::get('url') }}</small>
                     <form action="/create/url" method="post">
+                        <input type="hidden" name="url" value="{{ Request::get('url') }}">
                         {{ csrf_field() }}
                         <button type="submit" class="btn btn-primary float-right">Create</button>
                     </form>

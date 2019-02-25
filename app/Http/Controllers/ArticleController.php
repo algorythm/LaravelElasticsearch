@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use Goutte\Client;
 use Illuminate\Http\Request;
 use App\Repository\ArticlesRepository;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
@@ -40,7 +41,7 @@ class ArticleController extends Controller
 
     public function create_from_url(Request $req)
     {
-        if ($req->has("preview"))
+        if ($req->has("preview") && !$req->has("article"))
         {
             return view("articles.article", [
                 'article' => $this->scrapeArticle($req->url),
@@ -48,16 +49,56 @@ class ArticleController extends Controller
         }
         else
         {
-            Article::create($this->scrapeArticle($req->url));
+            $article = $this->scrapeArticle($req->url)->save();
+            return redirect("/");
         }
     }
 
     private function scrapeArticle($url)
     {
+        $client = new Client();
+
+        $guzzleClient = new \GuzzleHttp\Client([
+            'timeout' => 60,
+            'verify' => false,
+        ]);
+
+        $client->setClient($guzzleClient);
+        $crawler = $client->request("GET", $url);
+
+        $crawler->filter(".dre-stasndard-article article header h1 span")->each(function($node) {
+            $stuff += $node;
+        });
+
+        $tags = [];
+
+        $rantUser = $crawler->filter(".rant-top-info .rant-username")->extract("_text")[0];
+        $rantUpvotes = $crawler->filter(".post-details-text .votecount")->extract("_text")[0];
+        $articleTitle = "$rantUser ($rantUpvotes upvotes)";
+
+        $articleBody = $crawler->filter(".post-details-text .rantlist-content")->each(function($node) {
+            return $node->html();
+        })[0];
+
+        $articleImage = $crawler->filter(".post-details-text .rant-image.details-image")->each(function($node) {
+            return $node->html();
+        });
+
+        
+        if (sizeof($articleImage) > 0)
+        {
+            $articleBody = "$articleBody<br/>$articleImage[0]";
+        }
+
+        foreach ($crawler->filter(".post-details-text .rantlist-tags h2.rantlist-content-tag")->extract("_text") as $tag)
+        {
+            array_push($tags, $tag);
+        }
+
         return new Article([
-            'title' => "This is a test",
-            'body' => "A small body for a small test.",
-            'tags' => ["tag1", "tag2"]
+            'title' => $articleTitle,
+            'body' => $articleBody,
+            'tags' => $tags,
         ]);
     }
 }
