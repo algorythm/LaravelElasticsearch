@@ -3,7 +3,7 @@
 use App\Repository\ArticlesRepository;
  Route::get('/', function() {
     return view('articles.index', [
-        'articles' => App\Article::all(),
+        'articles' => App\Article::orderBy('created_at', 'desc')->get(),
     ]);
 });
 
