@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Article;
 use Goutte\Client;
+use App\Jobs\ScrapeDevrant;
 use Illuminate\Http\Request;
 use App\Repository\ArticlesRepository;
 use Illuminate\Support\Facades\Redirect;
@@ -49,7 +50,8 @@ class ArticleController extends Controller
         }
         else
         {
-            $article = $this->scrapeArticle($req->url)->save();
+            // $article = $this->scrapeArticle($req->url)->save();
+            ScrapeDevrant::dispatch($req->url)->delay(now()->addMinutes(1));
             return redirect("/");
         }
     }
