@@ -51,7 +51,7 @@ class ArticleController extends Controller
         else
         {
             // $article = $this->scrapeArticle($req->url)->save();
-            ScrapeDevrant::dispatch($req->url)->delay(now()->addMinutes(1));
+            ScrapeDevrant::dispatch($req->url)->delay(now()->addSeconds(10));
             return redirect("/");
         }
     }

@@ -79,8 +79,6 @@ class ScrapeDevrant implements ShouldQueue
             array_push($tags, $tag);
         }
 
-        sleep(30);
-
         Article::create([
             'title' => $articleTitle,
             'body' => $articleBody,
